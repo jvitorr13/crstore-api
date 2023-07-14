@@ -6,7 +6,7 @@ import path from 'path';
 import routes from './routes';
 import cors from 'cors';
 import fileupload from 'express-fileupload';
-
+require('./models/indexModel')
 const app = express();
 
 const accessLogStream = fs.createWriteStream(
@@ -37,5 +37,5 @@ app.use((req, res) => {
 });
 
 app.listen(3333, () => {
-  console.log(`ABEX API running in 3333`);
+  console.log(`CRS Store running in 3333`);
 });

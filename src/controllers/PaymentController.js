@@ -1,137 +1,137 @@
-import BaseModel from "../models/BaseModel";
+import PaymentModel from "../models/PaymentModel";
 
 const get = async (req, res) => {
   try {
-    let id = req.params.id ? req.params.id.toString().replace(/\D/g, '') : null;
+    let id = req.params.id ? req.params.id.toString().replace(/\D/g, "") : null;
 
     if (!id) {
-      let response = await BaseModel.findAll({
-        order: [['id', 'asc']]
+      let response = await PaymentModel.findAll({
+        order: [["id", "asc"]],
       });
       return res.status(200).send({
-        type: 'success',
-        message: 'Registros carregados com sucesso',
-        data: response 
+        type: "success",
+        message: "Registros carregados com sucesso",
+        data: response,
       });
-    };
+    }
 
-    let response = await BaseModel.findOne({ where: { id } });
+    let response = await PaymentModel.findOne({ where: { id } });
 
     if (!response) {
       return res.status(200).send({
-        type: 'error',
+        type: "error",
         message: `Nenhum registro com id ${id}`,
-        data: [] 
+        data: [],
       });
     }
 
     return res.status(200).send({
-      type: 'success',
-      message: 'Registro carregado com sucesso',
-      data: response 
+      type: "success",
+      message: "Registro carregado com sucesso",
+      data: response,
     });
   } catch (error) {
     return res.status(200).send({
-      type: 'error',
+      type: "error",
       message: `Ops! Ocorreu um erro`,
-      error: error.message 
+      error: error.message,
     });
   }
-}
+};
 
 const persist = async (req, res) => {
   try {
-    let id = req.params.id ? req.params.id.toString().replace(/\D/g, '') : null;
-    
+    let id = req.params.id ? req.params.id.toString().replace(/\D/g, "") : null;
+
     if (!id) {
-      return await create(req.body, res)
+      return await create(req.body, res);
     }
 
-    return await update(id, req.body, res)
+    return await update(id, req.body, res);
   } catch (error) {
     return res.status(200).send({
-      type: 'error',
+      type: "error",
       message: `Ops! Ocorreu um erro`,
-      error: error
+      error: error,
     });
   }
-}
+};
 
 const create = async (dados, res) => {
-  let { description, color, inactive } = dados;
+  let {
+    name,
+  } = dados;
 
-  let response = await BaseModel.create({
-    description,
-    color,
-    inactive
+  let response = await PaymentModel.create({
+    name,
   });
 
   return res.status(200).send({
-    type: 'success',
+    type: "success",
     message: `Cadastro realizado com sucesso`,
-    data: response 
+    data: response,
   });
-}
+};
 
 const update = async (id, dados, res) => {
-  let response = await BaseModel.findOne({ where: { id } });
+  let response = await PaymentModel.findOne({ where: { id } });
 
   if (!response) {
     return res.status(200).send({
-      type: 'error',
+      type: "error",
       message: `Nenhum registro com id ${id} para atualizar`,
-      data: [] 
+      data: [],
     });
   }
 
-  Object.keys(dados).forEach(field => response[field] = dados[field]);
+  Object.keys(dados).forEach((field) => (response[field] = dados[field]));
 
   await response.save();
   return res.status(200).send({
-    type: 'success',
+    type: "success",
     message: `Registro id ${id} atualizado com sucesso`,
-    data: response
+    data: response,
   });
-}
+};
 
 const destroy = async (req, res) => {
   try {
-    let id = req.body.id ? req.body.id.toString().replace(/\D/g, '') : null;
+    let id = req.params.id ? req.params.id.toString().replace(/\D/g, "") : null;
     if (!id) {
       return res.status(200).send({
-        type: 'error',
+        type: "error",
         message: `Informe um id para deletar o registro`,
-        data: [] 
+        data: [],
       });
     }
 
-    let response = await BaseModel.findOne({ where: { id } });
+    let response = await PaymentModel.findOne({ where: { id } });
 
     if (!response) {
       return res.status(200).send({
-        type: 'error',
+        type: "error",
         message: `Nenhum registro com id ${id} para deletar`,
-        data: [] 
+        data: [],
       });
     }
 
     await response.destroy();
     return res.status(200).send({
-      type: 'success',
+      type: "success",
       message: `Registro id ${id} deletado com sucesso`,
-      data: [] 
+      data: [],
     });
   } catch (error) {
     return res.status(200).send({
-      type: 'error',
+      type: "error",
       message: `Ops! Ocorreu um erro`,
-      error: error.message 
+      error: error.message,
     });
   }
-}
+};
 
 export default {
   get,
   persist,
-  destroy
-}
+  destroy,
+};
